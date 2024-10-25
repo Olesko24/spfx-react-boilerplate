@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "sp-webpart-template-client-side-solution",
+    "id": "1ae69cc5-f4e4-4657-8ce1-363fc80c7633",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.19.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "sp-webpart-template description"
+      },
+      "longDescription": {
+        "default": "sp-webpart-template description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "sp-webpart-template Feature",
+        "description": "The feature that activates elements of the sp-webpart-template solution.",
+        "id": "1d4f44de-beeb-4045-b5c4-a77b3e2f3335",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/sp-webpart-template.sppkg"
+  }
+}

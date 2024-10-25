@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.grid:before {
+  content: none !important;
+  display: none !important;
+}
+
+.grid:after {
+  content: none !important;
+  display: none !important;
+}
