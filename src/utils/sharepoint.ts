@@ -2,7 +2,6 @@ import { ISPFXContext, SPFI, spfi, SPFx } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import "@pnp/sp/items/get-all";
 import "@pnp/sp/attachments";
 import "@pnp/sp/profiles";
 import "@pnp/sp/site-users";
@@ -23,7 +22,6 @@ import "@pnp/sp/views";
 import "@pnp/sp/items";
 import "@pnp/sp/folders";
 import "@pnp/sp/files";
-import "@pnp/sp/items/get-all";
 import "@pnp/sp/site-users";
 import "@pnp/sp/regional-settings/web";
 
@@ -67,7 +65,7 @@ export async function getListItems(
     lookup?: string[]
 ): Promise<any[]> {
     try {
-        const query: any = sp.web.lists.getByTitle(listTitle).items;
+        const query = sp.web.lists.getByTitle(listTitle).items;
 
         if (fields) {
             query.select(...fields);
@@ -81,7 +79,7 @@ export async function getListItems(
             query.filter(queryFilter);
         }
 
-        const items = await query.getAll();
+        const items = await query.top(25000)();
 
         if (withAttachments) {
             for (const item of items) {

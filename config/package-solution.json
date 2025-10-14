@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "sp-webpart-template-client-side-solution",
-    "id": "1ae69cc5-f4e4-4657-8ce1-363fc80c7633",
+    "name": "sp-hello-world-webpart",
+    "id": "065a9680-45e5-4b6b-8fa0-5691c4f34fe7",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,

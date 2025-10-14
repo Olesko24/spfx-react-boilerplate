@@ -14,7 +14,6 @@ import { IAppProps } from './components/App';
 import { FluentProvider, FluentProviderProps, IdPrefixProvider, teamsDarkTheme, teamsLightTheme, Theme, webDarkTheme, webLightTheme } from '@fluentui/react-components';
 import { createV9Theme } from '@fluentui/react-migration-v8-v9';
 import { initSP } from '../../utils/sharepoint';
-import "../../styles/dist/tailwind.css";
 
 /**
  * Web part Property Pane Props
@@ -75,6 +74,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       const teamsContext = await this.context.sdks.microsoftTeams.teamsJs.app.getContext();
       switch (teamsContext.app.host.name.toLowerCase()) {
         case 'teams': this._appMode = _l ? AppMode.TeamsLocal : AppMode.Teams; break;
+        case 'teamsmodern': this._appMode = _l ? AppMode.TeamsLocal : AppMode.Teams; break;
         case 'office': this._appMode = _l ? AppMode.OfficeLocal : AppMode.Office; break;
         case 'outlook': this._appMode = _l ? AppMode.OutlookLocal : AppMode.Outlook; break;
         default: throw new Error('Unknown host');

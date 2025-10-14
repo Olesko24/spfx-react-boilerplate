@@ -1,9 +1,9 @@
 {
   "name": "sp-webpart-template",
-  "version": "2.0.1",
+  "version": "3.1.0",
   "private": true,
   "engines": {
-    "node": ">=18.17.1 <19.0.0"
+    "node": ">=22.14.0 < 23.0.0"
   },
   "main": "lib/index.js",
   "scripts": {
@@ -12,46 +12,49 @@
     "clean": "gulp clean",
     "test": "gulp test",
     "bundle": "npm-run-all taildwindcss build",
-    "bundle:ship": "npm-run-all taildwindcss build:ship",
+    "bundle:ship": "npm-run-all clean taildwindcss build:ship",
     "webpack:serve": "fast-serve",
-    "serve": "fast-serve",
-    "taildwindcss": "tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/dist/tailwind.css --minify --postcss ./src/styles/postcss.config.js",
-    "tailwindcss:watch": "tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/dist/tailwind.css --watch --minify --postcss ./src/styles/postcss.config.js"
+    "serve": "npm-run-all -p tailwindcss:watch webpack:serve",
+    "taildwindcss": "tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/dist/tailwind.css --minify",
+    "tailwindcss:watch": "tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/dist/tailwind.css --watch --minify"
   },
   "dependencies": {
     "@fluentui/react": "^8.106.4",
     "@fluentui/react-components": "^9.54.17",
     "@fluentui/react-migration-v8-v9": "^9.6.35",
-    "@microsoft/sp-component-base": "1.19.0",
-    "@microsoft/sp-core-library": "1.19.0",
-    "@microsoft/sp-lodash-subset": "1.19.0",
-    "@microsoft/sp-office-ui-fabric-core": "1.19.0",
-    "@microsoft/sp-property-pane": "1.19.0",
-    "@microsoft/sp-webpart-base": "1.19.0",
+    "@microsoft/sp-adaptive-card-extension-base": "1.21.1",
+    "@microsoft/sp-component-base": "1.21.1",
+    "@microsoft/sp-core-library": "1.21.1",
+    "@microsoft/sp-lodash-subset": "1.21.1",
+    "@microsoft/sp-office-ui-fabric-core": "1.21.1",
+    "@microsoft/sp-property-pane": "1.21.1",
+    "@microsoft/sp-webpart-base": "1.21.1",
     "@pnp/sp": "^4.5.0",
+    "@tailwindcss/cli": "^4.1.11",
+    "@tailwindcss/postcss": "^4.1.11",
+    "postcss": "^8.5.6",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "tslib": "2.3.1"
   },
   "devDependencies": {
-    "@microsoft/eslint-config-spfx": "1.20.1",
-    "@microsoft/eslint-plugin-spfx": "1.20.1",
-    "@microsoft/rush-stack-compiler-4.5": "^0.5.1",
-    "@microsoft/rush-stack-compiler-4.7": "0.1.0",
-    "@microsoft/sp-build-web": "1.20.1",
-    "@microsoft/sp-module-interfaces": "1.20.1",
-    "@rushstack/eslint-config": "2.5.1",
+    "@microsoft/eslint-config-spfx": "1.21.1",
+    "@microsoft/eslint-plugin-spfx": "1.21.1",
+    "@microsoft/rush-stack-compiler-5.3": "0.1.0",
+    "@microsoft/sp-build-web": "1.21.1",
+    "@microsoft/sp-module-interfaces": "1.21.1",
+    "@rushstack/eslint-config": "4.0.1",
     "@types/react": "17.0.45",
     "@types/react-dom": "17.0.17",
     "@types/webpack-env": "~1.15.2",
     "ajv": "^6.12.5",
-    "eslint": "8.7.0",
+    "eslint": "8.57.1",
     "eslint-plugin-react-hooks": "4.3.0",
     "gulp": "4.0.2",
     "npm-run-all": "^4.1.5",
     "spfx-fast-serve": "^4.0.1",
-    "spfx-fast-serve-helpers": "~1.19.0",
-    "tailwindcss": "^3.4.13",
-    "typescript": "4.7.4"
+    "spfx-fast-serve-helpers": "1.21.1",
+    "tailwindcss": "^4.1.11",
+    "typescript": "5.3.3"
   }
 }

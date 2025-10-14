@@ -1,6 +1,6 @@
 # SharePoint Online React Template 
 
-## Currently on Version 2.0.1
+## Currently on Version 3.1.0
 
 **View the [Changelog](./CHANGELOG.md) for more Information.**
 
@@ -11,9 +11,19 @@
 - [Prerequisites 🛠](#prerequisites-)
   - [Used SPFx Version](#used-spfx-version)
   - [Environment](#environment)
+  - [NPM Packages](#npm-packages)
+- [Cloning this Project 🚀](#cloning-this-project-)
+- [TailwindCSS](#tailwindcss)
+- [Settings 🛠](#settings-)
+  - [Project Name](#project-name)
+  - [Development](#development)
 - [Deployment 🛫](#deployment-)
+  - [Test](#minimal-path-to-awesome-test-deployment)
+  - [Production](#maximum-path-to-awesome-production-deployment)
   - [Upload to App Catalog](#how-to-upload-to-app-catalog)
   - [Configure Solution Settings](#configure-solution-settings)
+- [Add App to Page](#how-to-add-to-the-sharepoint-online)
+- [Step-By-Step Guide 🏄](#step-by-step-guide-)
 - [Optional 💡](#optional-)
   - [Full-Width Column](#full-width-column)
   - [Webpart Icon](#webpart-icon)
@@ -26,6 +36,7 @@
   - [Property Pane](#property-pane-1)
 - [REST Api 📥](#rest-api-)
 - [Logging 📃](#logging-)
+- [Upgrade SPFx Version](#upgrade-spfx-version)
 - [Git Commits ✉](#git-commits-)
 - [Known Issues 🚧](#known-issues-)
 
@@ -39,13 +50,17 @@ If the Versions in that Documentation has been changed here are the Versions thi
 
 ### Used SPFx Version
 
-![version](https://img.shields.io/badge/version-1.19.1-green.svg)
+![version](https://img.shields.io/badge/version-1.21.1-green.svg)
+
+See [here](https://learn.microsoft.com/de-de/sharepoint/dev/spfx/roadmap) for the official Microsoft SharePoint SPFx Changelog.
 
 ### Environment
 
 | Software | Version |
 | -------- | ------- |
-| Node     | 18.19.0 |
+| Node     | v22.17.1 |
+| npm      | 10.9.2   |
+| SPFx      | 1.21.1  |
 
 To use the correct Node version install [nvm](https://github.com/nvm-sh/nvm). It makes changing the Node version much easier!
 
@@ -55,9 +70,7 @@ Run the following in the terminal:
 nvm use #this will take the specified version in the .nvmrc file
 
 # optional
-nvm install 18
-
-nvm use 18
+nvm install
 ```
 
 For more detailed Information check out the [nvm usage documentation](https://github.com/nvm-sh/nvm#usage).
@@ -68,6 +81,77 @@ Check out the detailed Guide from Microsoft to get the latest versions:
 
 https://learn.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-development-environment
 
+## Cloning this Project 🚀
+
+If you are on Github just create a new Repository and select the "sharepoint-online-react-template" as a Template.
+
+If you are cloning this Repository follow this Guide:
+
+**First of all run the following command to clone this project:**
+
+Replace `<your_username>` with your git username or instead copy the Repository URL at the top right.
+
+If you want to create the Repository in a different folder name, just replace `<project_name>` with your Project Name.
+
+```bash
+git clone https://git.snutig.dev/<your_username>/SharePoint-Online-React-Template.git <project_name>
+```
+
+<img src=./docs/clone_repo.png width="900" />
+
+<br />
+
+**Change local Repository URL:**
+
+After you cloned this Repository and want to configure it to your own needs, you have to change the associated Git Repository. Otherwise your commits would be pushed to this Template Repository in theory (but you dont have permisisons for this ... ).
+
+To change the Repository Remote URL run the following command:
+
+_Replace `git://new.url.here` with your new created Repository URL_
+
+```bash
+git remote set-url origin git://new.url.here
+
+git push -u origin main
+```
+
+**Important 🚨: Install NPM Packages:**
+
+Run the following code in your command line. This will take some time.
+
+```bash
+npm install
+```
+
+## TailwindCSS
+
+> TailwindCSS is activated by default at Version 4.1.11 since 12.08.2025!
+
+See here for more Information about TailwindCSS: https://tailwindcss.com/
+
+See this post to check out how we are getting the Fluent UI / SharePoint Theme Variables working:
+
+https://github.com/tailwindlabs/tailwindcss/discussions/15199
+
+```css
+...
+@theme inline {
+    /* Colors coming from your Fluent/brand CSS variables */
+  --color-neutral-foreground: var(--colorNeutralForeground1);
+  --color-neutral-foreground-on-brand: var(--colorNeutralForegroundOnBrand);
+  --color-brand-background: var(--colorBrandBackground);
+  --color-brand-background-hover: var(--colorBrandBackgroundHover);
+}
+```
+
+For more Color Variables check out the [FluentUI Documentation](https://react.fluentui.dev/?path=/docs/theme-colors--docs).
+
+If the Tailwind CLI is not working on macOS try installing it with homebrew:
+
+```bash
+brew install tailwindcss
+```
+
 ## SPFx Fast Serve Tool
 
 See official Package description [here](https://github.com/s-KaiNet/spfx-fast-serve?tab=readme-ov-file).
@@ -75,6 +159,97 @@ See official Package description [here](https://github.com/s-KaiNet/spfx-fast-se
 Best Tool ever for SharePoint Development!!!
 
 ## Settings 🛠
+
+## Project Name 🔨
+
+If you have choosen a Name for your Webpart you have to change some variables in the whole Code.
+
+Lets say you have choosen the Name `BestWebpart`. In this example we will go through every Setting you have to make to apply the Name properly.
+
+**`package.json`**
+
+```json
+{
+  "name": "best-webpart", // change the name here (use kebab case!)
+  ...
+}
+```
+
+**Webpart Files `src/webparts/`**
+
+Change all the Occurrences of `WebpartName` to your choosen Webpart Name (in this example `ClothingShop` / `ClothingShopWebPart`).
+
+If your VSCode is properly configured it should ask you to change all the imports or do it automatically. Otherwise you have to adjust them by yourself (no tutorial for this, sorry ... ).
+
+<img src=./docs/file_name_change.png width="400" />
+
+**`src/webparts/ClothingShop/ClothingShopWebPart.manifest.json`**
+
+```json
+{
+  ...
+  "id": "<new uuid>", // create a new uuid
+  ...
+  "alias": "ClothingShopWebPart", // change the name here (use kamel case!)
+  ...
+}
+```
+
+You can create a new uuid here: [here](https://www.uuidgenerator.net/version4)
+
+> ignore the warning produced from the comments in this file. You can also delete the comments to remove the Error Messages.
+
+**`config/config.json`**
+
+```json
+{
+  ...
+  "bundles": {
+    "clothing-shop": { // you can choose your own name here
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/ClothingShop/ClothingShopWebPart.js",
+          "manifest": "./src/webparts/ClothingShop/ClothingShopWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  ...
+  "localizedResources": {
+    "ClothingShopWebPartStrings": "lib/webparts/ClothingShop/loc/{locale}.js"
+  }
+}
+```
+
+**`src/webparts/ClothingShop/ClothingShopWebPart.ts`**
+
+```typescript
+...
+export interface IClothingShopWebPart {
+  ...
+}
+
+export default class ClothingShopWebPart extends BaseClientSideWebPart<IClothingShopWebPart> {
+  ...
+}
+```
+
+### Deployment
+
+**`config/package-solution.json`**
+
+```json
+{
+  ...
+  "solution": {
+    ...
+    "id": "<new uuid>",
+    ...
+  }
+}
+```
+
+You can create a new uuid here: [here](https://www.uuidgenerator.net/version4)
 
 ### Development 🧑‍💻
 
@@ -100,9 +275,6 @@ Open a new Terminal in the root folder of this Project and run the following Cod
 ```bash
 gulp trust-dev-cert # only for first deployment
 
-npm run serve # will use spfx-fast-serve
-
-# deprecated
 gulp serve # will open a new tab in your default browser with the workbench
 ```
 
@@ -111,7 +283,7 @@ gulp serve # will open a new tab in your default browser with the workbench
 ```bash
 gulp clean # optional
 
-npm run bundle:ship
+gulp bundle --ship
 
 gulp package-solution --ship
 ```
@@ -189,6 +361,118 @@ Publish-PnPApp -Identity $App.ID -Scope Tenant
 Solution Settings file is saved in `config/package-solution.json`.
 
 Follow [this Guide](https://pnp.github.io/blog/post/spfx-21-professional-solutions-superb-solution-packages/) to configure all the mandatory settings.
+
+## How to add to the SharePoint Online:
+
+### 1. Click on Neu and choose Seite:
+
+<img src=./docs/deploy1.png width="900" />
+
+### 2. Click on Apps and choose your App:
+
+<img src=./docs/deploy2.png width="900" />
+
+## Step-By-Step Guide 🏄
+
+This Guide assumes that you have copied all files from this repository to your local environment and have all [Prerequisites](#prerequisites) installed.
+
+### 1. Install Dependencies
+
+```bash
+nvm use 16 #make sure to use Node Version 16
+
+npm install
+```
+
+### 2. Trust Dev Certificate
+
+```bash
+gulp trust-dev-cert # necessary for SPFX Development
+```
+
+### 3. Change Workbench URL
+
+`config/serve.json`
+
+```json
+{
+  ...
+  "initialPage": "https://<tenant>.sharepoint.com/layouts/workbench.aspx"
+  // example: "https://testcompany.sharepoint.com/sites/Test/_layouts/workbench.aspx"
+}
+```
+
+### 4. Change Webpart ID's
+
+Create for **each ID** a new UUIDv4. This can be done [here](https://www.uuidgenerator.net/version4).
+
+`config/package-solution.json`
+
+```json
+{
+  ...
+  "solution": {
+    ...
+    "id": "<new uuid1>"
+  }
+}
+```
+
+`src/webparts/webpartName/WebpartNameWebPart.manifest.json`
+
+```json
+{
+  "id": "<new uuid2>"
+}
+```
+
+If this Step is skipped the Webpart cant be deployed to the final Page because every Webpart ID has to be unique.
+
+### 5. Run Development Mode
+
+Now you should be able to run the Workbench and actually see your Webpart.
+
+```bash
+gulp serve
+
+# press ctrl + c to exit
+```
+
+### 6. Change Configuration
+
+`package.json`
+
+```json
+{
+  "name": "<project name>",
+  ...
+}
+```
+
+`config/package-solution.json`
+
+```json
+{
+  ...
+  "solution": {
+    "name": "<project name>",
+    ...
+    "metadata": {
+      "shortDescription": {
+        "default": ""
+      },
+      "longDescription": {
+        "default": ""
+      }
+    }
+  },
+  "paths": {
+    "zippedPackage": "solution/<project-name>.sppkg"
+  }
+}
+```
+
+**For all Configurations see the Instructions [here](#project-name).**
 
 ## Optional 💡
 
@@ -436,6 +720,17 @@ In the Log method description its written that the logs are shown in the _develo
 
 To open the _developer dashbord_ in SharePoint you have to press the keys <kbd>Ctrl</kbd> + <kbd>F12</kbd> or on MacOS also works <kbd>Command</kbd> + <kbd>F12</kbd> .
 
+## Upgrade SPFx Version
+
+You can use the PnP Cli to upgrade the version with the Assistant. Look here for further information: [Link](https://pnp.github.io/cli-microsoft365/cmd/spfx/project/project-upgrade/)
+
+```bash
+m365 spfx project upgrade [options]
+
+# example
+m365 spfx project upgrade md > "upgrade-report.md"
+```
+
 ## Git Commits ✉
 
 We are using the packages `husky` and `commitlint` to keep control of the git commit messages. The configuration can be found in the `commitlint.config.js` file.
@@ -455,3 +750,11 @@ After you create a new `module.scss` file it sometimes isnt recognized in the co
 <img src=./docs/issue_scss_not_found.png width="600" />
 
 To solve this error just run `gulp serve` in the command line.
+
+**Error - [webpack] 'dist': [object Object]**
+
+Replace the code in `node_modules/@microsoft/gulp-core-build-webpack/lib/WebpackTask.js` at line 84 with the following code:
+
+```ts
+this.logError(`'${outputDir}':` + os_1.EOL + statsResult.errors.map(x => JSON.stringify(x, null, 2)).join(os_1.EOL) + os_1.EOL);
+```

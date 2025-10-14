@@ -2,11 +2,6 @@ require('@rushstack/eslint-config/patch/modern-module-resolution');
 module.exports = {
   extends: ['@microsoft/eslint-config-spfx/lib/profiles/react'],
   parserOptions: { tsconfigRootDir: __dirname },
-  env: {
-    "browser": true,
-    "node": true,
-    "es6": true
-  },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -27,37 +22,6 @@ module.exports = {
         '@typescript-eslint/adjacent-overload-signatures': 1,
         // STANDARDIZED BY:   @typescript-eslint\eslint-plugin\dist\configs\recommended.json
         //
-        // CONFIGURATION:     By default, these are banned: String, Boolean, Number, Object, Symbol
-        '@typescript-eslint/ban-types': [
-          1,
-          {
-            'extendDefaults': false,
-            'types': {
-              'String': {
-                'message': 'Use \'string\' instead',
-                'fixWith': 'string'
-              },
-              'Boolean': {
-                'message': 'Use \'boolean\' instead',
-                'fixWith': 'boolean'
-              },
-              'Number': {
-                'message': 'Use \'number\' instead',
-                'fixWith': 'number'
-              },
-              'Object': {
-                'message': 'Use \'object\' instead, or else define a proper TypeScript type:'
-              },
-              'Symbol': {
-                'message': 'Use \'symbol\' instead',
-                'fixWith': 'symbol'
-              },
-              'Function': {
-                'message': 'The \'Function\' type accepts any function-like value.\nIt provides no type safety when calling the function, which can be a common source of bugs.\nIt also accepts things like class declarations, which will throw at runtime as they will not be called with \'new\'.\nIf you are expecting the function to accept certain arguments, you should explicitly define the function shape.'
-              }
-            }
-          }
-        ],
         // RATIONALE:         Code is more readable when the type of every variable is immediately obvious.
         //                    Even if the compiler may be able to infer a type, this inference will be unavailable
         //                    to a person who is reviewing a GitHub diff.  This rule makes writing code harder,
@@ -151,7 +115,7 @@ module.exports = {
         ],
         // Disallows require statements except in import statements.
         // In other words, the use of forms such as var foo = require("foo") are banned. Instead use ES6 style imports or import foo = require("foo") imports.
-        '@typescript-eslint/no-var-requires': 0,
+        '@typescript-eslint/no-var-requires': 'error',
         // RATIONALE:         The "module" keyword is deprecated except when describing legacy libraries.
         //
         // STANDARDIZED BY:   @typescript-eslint\eslint-plugin\dist\configs\recommended.json
@@ -257,7 +221,6 @@ module.exports = {
         // RATIONALE:         Catches a common coding mistake.
         'no-return-assign': 2,
         // RATIONALE:         Security risk.
-        'no-case-declarations': 0,
         'no-script-url': 1,
         // STANDARDIZED BY:   eslint\conf\eslint-recommended.js
         'no-self-assign': 2,
@@ -303,7 +266,7 @@ module.exports = {
         // STANDARDIZED BY:   eslint\conf\eslint-recommended.js
         'no-with': 2,
         // RATIONALE:         Makes logic easier to understand, since constants always have a known value
-        // @typescript-eslint\eslint-plugin\dist\configs\eslint-recommended.js
+        // @typescript-eslinteslint-plugindistconfigseslint-recommended.js
         'prefer-const': 1,
         // RATIONALE:         Catches a common coding mistake where "resolve" and "reject" are confused.
         'promise/param-names': 2,
@@ -329,7 +292,7 @@ module.exports = {
         // ====================================================================
         '@microsoft/spfx/import-requires-chunk-name': 1,
         '@microsoft/spfx/no-require-ensure': 2,
-        '@microsoft/spfx/pair-react-dom-render-unmount': 1,
+        '@microsoft/spfx/pair-react-dom-render-unmount': 1
       }
     },
     {
@@ -352,7 +315,33 @@ module.exports = {
         '**/test/*.ts',
         '**/test/*.tsx'
       ],
-      rules: {}
+      rules: {
+        'no-new': 0,
+        'class-name': 0,
+        'export-name': 0,
+        forin: 0,
+        'label-position': 0,
+        'member-access': 2,
+        'no-arg': 0,
+        'no-console': 0,
+        'no-construct': 0,
+        'no-duplicate-variable': 2,
+        'no-eval': 0,
+        'no-function-expression': 2,
+        'no-internal-module': 2,
+        'no-shadowed-variable': 2,
+        'no-switch-case-fall-through': 2,
+        'no-unnecessary-semicolons': 2,
+        'no-unused-expression': 2,
+        'no-with-statement': 2,
+        semicolon: 2,
+        'trailing-comma': 0,
+        typedef: 0,
+        'typedef-whitespace': 0,
+        'use-named-parameter': 2,
+        'variable-name': 0,
+        whitespace: 0
+      }
     }
   ]
 };
