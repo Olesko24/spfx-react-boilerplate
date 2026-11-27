@@ -1,6 +1,6 @@
 # SharePoint Online React Template 
 
-## Currently on Version 3.1.0
+## Currently on Version 4.0.0
 
 **View the [Changelog](./CHANGELOG.md) for more Information.**
 
@@ -14,6 +14,7 @@
   - [NPM Packages](#npm-packages)
 - [Cloning this Project 🚀](#cloning-this-project-)
 - [TailwindCSS](#tailwindcss)
+- [Build Toolchain (Heft)](#build-toolchain-heft)
 - [Settings 🛠](#settings-)
   - [Project Name](#project-name)
   - [Development](#development)
@@ -37,7 +38,6 @@
 - [REST Api 📥](#rest-api-)
 - [Logging 📃](#logging-)
 - [Upgrade SPFx Version](#upgrade-spfx-version)
-- [Git Commits ✉](#git-commits-)
 - [Known Issues 🚧](#known-issues-)
 
 <br />
@@ -50,7 +50,7 @@ If the Versions in that Documentation has been changed here are the Versions thi
 
 ### Used SPFx Version
 
-![version](https://img.shields.io/badge/version-1.21.1-green.svg)
+![version](https://img.shields.io/badge/version-1.24.2-green.svg)
 
 See [here](https://learn.microsoft.com/de-de/sharepoint/dev/spfx/roadmap) for the official Microsoft SharePoint SPFx Changelog.
 
@@ -58,9 +58,12 @@ See [here](https://learn.microsoft.com/de-de/sharepoint/dev/spfx/roadmap) for th
 
 | Software | Version |
 | -------- | ------- |
-| Node     | v22.17.1 |
-| npm      | 10.9.2   |
-| SPFx      | 1.21.1  |
+| Node     | v24.14.1 |
+| npm      | 11.11.0  |
+| SPFx     | 1.24.2   |
+| React    | 18.3.1   |
+
+SPFx 1.24 supports Node 22, 24 and 26. The `.nvmrc` pins the current LTS (24).
 
 To use the correct Node version install [nvm](https://github.com/nvm-sh/nvm). It makes changing the Node version much easier!
 
@@ -75,31 +78,15 @@ nvm install
 
 For more detailed Information check out the [nvm usage documentation](https://github.com/nvm-sh/nvm#usage).
 
-### Environment
-
-Check out the detailed Guide from Microsoft to get the latest versions:
-
-https://learn.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-development-environment
-
 ## Cloning this Project 🚀
 
-If you are on Github just create a new Repository and select the "sharepoint-online-react-template" as a Template.
+On GitHub use **"Use this template"** to create a new Repository from this one.
 
-If you are cloning this Repository follow this Guide:
-
-**First of all run the following command to clone this project:**
-
-Replace `<your_username>` with your git username or instead copy the Repository URL at the top right.
-
-If you want to create the Repository in a different folder name, just replace `<project_name>` with your Project Name.
+Otherwise clone it (replace `<project_name>` with your Project Name):
 
 ```bash
-git clone https://git.snutig.dev/<your_username>/SharePoint-Online-React-Template.git <project_name>
+git clone https://github.com/Olesko24/spfx-react-boilerplate.git <project_name>
 ```
-
-<img src=./docs/clone_repo.png width="900" />
-
-<br />
 
 **Change local Repository URL:**
 
@@ -125,7 +112,9 @@ npm install
 
 ## TailwindCSS
 
-> TailwindCSS is activated by default at Version 4.1.11 since 12.08.2025!
+> TailwindCSS v4 is activated by default. Preflight is disabled so SharePoint's own styles stay untouched.
+
+The Tailwind CLI compiles `src/styles/tailwind.css` to `src/styles/dist/tailwind.css` (gitignored). `npm start` and `npm run build` run it automatically, so a fresh clone works without extra steps.
 
 See here for more Information about TailwindCSS: https://tailwindcss.com/
 
@@ -152,11 +141,19 @@ If the Tailwind CLI is not working on macOS try installing it with homebrew:
 brew install tailwindcss
 ```
 
-## SPFx Fast Serve Tool
+## Build Toolchain (Heft)
 
-See official Package description [here](https://github.com/s-KaiNet/spfx-fast-serve?tab=readme-ov-file).
+Newer SPFx versions replace the Gulp toolchain with [Heft](https://heft.rushstack.io/). There is no `gulpfile.js` anymore and `spfx-fast-serve` is no longer needed, `heft start` is fast by itself.
 
-Best Tool ever for SharePoint Development!!!
+| Command | What it does |
+| ------- | ------------ |
+| `npm start` | Tailwind watch + `heft start` (dev server with live reload) |
+| `npm run build` | Tailwind + production build + `.sppkg` |
+| `npm run lint` | ESLint (flat config in `eslint.config.js`) |
+| `npm run clean` | Removes build output |
+| `npx heft trust-dev-cert` | Trusts the localhost dev certificate (asks for your password) |
+
+Custom webpack config: `npm run eject-webpack` (only if really needed, you own the config afterwards).
 
 ## Settings 🛠
 
@@ -190,14 +187,12 @@ If your VSCode is properly configured it should ask you to change all the import
   ...
   "id": "<new uuid>", // create a new uuid
   ...
-  "alias": "ClothingShopWebPart", // change the name here (use kamel case!)
+  "alias": "ClothingShopWebPart", // change the name here (use camel case!)
   ...
 }
 ```
 
-You can create a new uuid here: [here](https://www.uuidgenerator.net/version4)
-
-> ignore the warning produced from the comments in this file. You can also delete the comments to remove the Error Messages.
+You can create a new uuid here: [here](https://www.uuidgenerator.net/version4) or with `uuidgen` in the terminal.
 
 **`config/config.json`**
 
@@ -255,11 +250,10 @@ You can create a new uuid here: [here](https://www.uuidgenerator.net/version4)
 
 **`config/serve.json`**
 
-```json
-{
-  ...
-  "initialPage": "https://enter-your-SharePoint-site/_layouts/workbench.aspx" // change the URL here and replace "enter-your-SharePoint-site" with your SharePoint URL
-}
+`initialPage` uses the `{tenantDomain}` placeholder. Set your tenant once as environment variable instead of editing the file:
+
+```bash
+export SPFX_SERVE_TENANT_DOMAIN=contoso.sharepoint.com
 ```
 
 ## Deployment 🛫
@@ -273,22 +267,18 @@ _Requires that you have cloned this repository and made the previous changes._
 Open a new Terminal in the root folder of this Project and run the following Code:
 
 ```bash
-gulp trust-dev-cert # only for first deployment
+npx heft trust-dev-cert # only once, asks for your password
 
-gulp serve # will open a new tab in your default browser with the workbench
+npm start # opens the hosted workbench in your default browser
 ```
 
 ### Maximum Path to Awesome (Production Deployment) 💡
 
 ```bash
-gulp clean # optional
-
-gulp bundle --ship
-
-gulp package-solution --ship
+npm run build
 ```
 
-This commands will create a new `.sppkg` file in the `sharepoint/solution` folder. This file contains all the information and code for your Webpart.
+This command will create a new `.sppkg` file in the `sharepoint/solution` folder. This file contains all the information and code for your Webpart.
 
 ### How to upload to App Catalog
 
@@ -306,11 +296,9 @@ Click on the first square/button. On the next page just drag and drop the previo
 
 > This Section hasnt been tested yet! 🚧
 
-First you have to authenticate yourself in the Azure Active Directory. After you got the necessary Credentials follow the Guide [here](https://github.com/pnp/pnpjs/blob/version-3/docs/getting-started.md#using-pnpsp-spfi-factory-interface-in-nodejs).
+The script in `deployment/index.js` uploads the `.sppkg` to the tenant App Catalog with the [PnP sp](https://pnp.github.io/pnpjs/sp/alm/) ALM api. It authenticates with an Entra ID App Registration and a certificate, see the [PnPjs Node.js Guide](https://pnp.github.io/pnpjs/getting-started/#using-pnpsp-spfi-factory-interface-in-nodejs).
 
-After you got the Authentication its possible to upload the `.sppkg` with the ALM api provided by the [PnP sp](https://pnp.github.io/pnpjs/sp/alm/#pnpspappcatalog) package.
-
-Run the following commands in the command line:
+Fill in `clientId`, `tenantId`, `thumbprint` and the tenant URL in `deployment/index.js`, then create the certificate:
 
 ```bash
 openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365 -passout pass:yourPasswordHere
@@ -318,21 +306,12 @@ openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365 -p
 openssl rsa -in keytmp.pem -out key.pem -passin pass:yourPasswordHere
 ```
 
-> The above Code will generate three files, `cert.pem`, `key.pem`, and `keytmp.pem`. Upload the `cert.pem` file to Azure AD application registration. The `key.pem` file will be read in the configuration.
+> The above Code will generate three files, `cert.pem`, `key.pem`, and `keytmp.pem`. Upload the `cert.pem` file to the Entra ID App Registration. The `key.pem` file is read by the script. `*.pem` is gitignored, never commit the private key.
 
-```typescript
-// this represents the file bytes of the app package file
-const blob = new Blob();
-
-// there is an optional third argument to control overwriting existing files
-const r = await catalog.add("myapp.app", blob);
-
-// this is at its core a file add operation so you have access to the response data as well
-// as a File instance representing the created file
-console.log(JSON.stringify(r.data, null, 4));
-
-// all file operations are available
-const nameData = await r.file.select("Name")();
+```bash
+cd deployment
+npm install
+npm run uploadApp
 ```
 
 **Upload with Powershell**
@@ -364,13 +343,8 @@ Follow [this Guide](https://pnp.github.io/blog/post/spfx-21-professional-solutio
 
 ## How to add to the SharePoint Online:
 
-### 1. Click on Neu and choose Seite:
-
-<img src=./docs/deploy1.png width="900" />
-
-### 2. Click on Apps and choose your App:
-
-<img src=./docs/deploy2.png width="900" />
+1. On a site, click **New** and choose **Page**.
+2. Click **+** in a section and choose your web part from the toolbox.
 
 ## Step-By-Step Guide 🏄
 
@@ -379,7 +353,7 @@ This Guide assumes that you have copied all files from this repository to your l
 ### 1. Install Dependencies
 
 ```bash
-nvm use 16 #make sure to use Node Version 16
+nvm use # uses the version from .nvmrc
 
 npm install
 ```
@@ -387,20 +361,16 @@ npm install
 ### 2. Trust Dev Certificate
 
 ```bash
-gulp trust-dev-cert # necessary for SPFX Development
+npx heft trust-dev-cert # necessary for SPFx Development, asks for your password
 ```
 
-### 3. Change Workbench URL
+### 3. Set Workbench Tenant
 
-`config/serve.json`
-
-```json
-{
-  ...
-  "initialPage": "https://<tenant>.sharepoint.com/layouts/workbench.aspx"
-  // example: "https://testcompany.sharepoint.com/sites/Test/_layouts/workbench.aspx"
-}
+```bash
+export SPFX_SERVE_TENANT_DOMAIN=testcompany.sharepoint.com
 ```
+
+For a specific site change `initialPage` in `config/serve.json`, e.g. `https://{tenantDomain}/sites/Test/_layouts/workbench.aspx`.
 
 ### 4. Change Webpart ID's
 
@@ -433,7 +403,7 @@ If this Step is skipped the Webpart cant be deployed to the final Page because e
 Now you should be able to run the Workbench and actually see your Webpart.
 
 ```bash
-gulp serve
+npm start
 
 # press ctrl + c to exit
 ```
@@ -550,16 +520,18 @@ You can find all the available Fluent UI Icons [here](https://developer.microsof
 
 ### Component Library 📚
 
-**Fluent UI**
+**Fluent UI v9**
 
-Fluent UI is developed by the Microsoft Team and integrates its components perfectly into the SharePoint/Microsoft environment.
-Its also already installed in the dependencies of this project (`@microsoft/sp-office-ui-fabric-core`) so you can use their components out of the box.
-The possibility to work with [themes](https://github.com/microsoft/fluentui/wiki/theming) in Fluent UI is also pretty useful and makes styling easier.
+Fluent UI is developed by Microsoft and integrates perfectly into SharePoint/Teams. This template uses **Fluent UI v9** (`@fluentui/react-components`).
+
+The web part wraps the app in a `FluentProvider`. In SharePoint the site theme is converted to a v9 theme with `createV9Theme` (`@fluentui/react-migration-v8-v9`), in Teams the Teams themes are used. The v9 CSS variables (e.g. `--colorBrandBackground`) are then available in Tailwind, see [TailwindCSS](#tailwindcss).
+
+`IdPrefixProvider` prevents id collisions when multiple Fluent apps live on the same page, change its `value` per web part.
 
 **Useful Resources:**
 
-- [Fluent UI Components](https://developer.microsoft.com/en-us/fluentui#/controls/web)
-- [Fluent UI Icons](https://developer.microsoft.com/en-us/fluentui#/styles/web/icons)
+- [Fluent UI v9 Components](https://react.fluentui.dev/)
+- [Fluent UI Icons](https://react.fluentui.dev/?path=/docs/icons-catalog--docs)
 
 ### Package Solution Assets (Lists)
 
@@ -679,20 +651,22 @@ protected onPropertyPaneConfigurationComplete(): void;
 
 ## REST Api 📥
 
-Working with the REST Api in SPFx Webparts is pretty easy. The best solution is to use the `@pnp/sp` package because it already provides you with all the important functions in a promise-based system.
+Working with the REST Api in SPFx Webparts is pretty easy. The best solution is to use the `@pnp/sp` package (v4) because it already provides you with all the important functions in a promise-based system.
 
-Insert the following code to your `WebpartNameWebPart.ts` file:
+`src/utils/sharepoint.ts` contains ready-to-use helpers (list items, fields, views, files, users, time zones). Initialize it once in `onInit`:
 
 ```typescript
-import { spfi, SPFx } from "@pnp/sp";
+import { initSP, getListItems } from '../../utils/sharepoint';
 ...
 protected async onInit(): Promise<void> {
-  await super.onInit();
-  const sp = spfi().using(SPFx(this.context));
-  ...
+  initSP(this.context);
+  return super.onInit();
 }
 ...
+const items = await getListItems('Tasks', true, "Status eq 'Open'", ['Id', 'Title']);
 ```
+
+> `queryFilter` is a raw OData filter. Escape user input (`'` → `''`) before passing it.
 
 ## Logging 📃
 
@@ -725,21 +699,16 @@ To open the _developer dashbord_ in SharePoint you have to press the keys <kbd>C
 You can use the PnP Cli to upgrade the version with the Assistant. Look here for further information: [Link](https://pnp.github.io/cli-microsoft365/cmd/spfx/project/project-upgrade/)
 
 ```bash
-m365 spfx project upgrade [options]
+npm install -g @pnp/cli-microsoft365
 
-# example
-m365 spfx project upgrade md > "upgrade-report.md"
+m365 spfx project upgrade --output md > upgrade-report.md
 ```
 
-## Git Commits ✉
+For bigger jumps (e.g. Gulp → Heft) it is often easier to scaffold a fresh project with the new generator and compare the config files:
 
-We are using the packages `husky` and `commitlint` to keep control of the git commit messages. The configuration can be found in the `commitlint.config.js` file.
-
-`commitlint` will throw an error if the commit message is not like the expected syntax or the "type" is not existing in the list of avaliable types. You can find the available types in the `commitlint.config.js` file. [Here](https://www.conventionalcommits.org/en/v1.0.0/#summary) you can find some explanations for the types but most of them are self explaining.
-
-An error can look like this:
-
-<img src=./docs/commitlint_error.png width="900" />
+```bash
+npx -p yo -p @microsoft/generator-sharepoint@latest yo @microsoft/sharepoint --skip-install
+```
 
 ## Known Issues 🚧
 
@@ -749,12 +718,8 @@ After you create a new `module.scss` file it sometimes isnt recognized in the co
 
 <img src=./docs/issue_scss_not_found.png width="600" />
 
-To solve this error just run `gulp serve` in the command line.
+To solve this error just run `npm start` (or `npm run build`) once, it generates the `.scss` typings.
 
-**Error - [webpack] 'dist': [object Object]**
+**`Cannot find module '../../../styles/dist/tailwind.css'`**
 
-Replace the code in `node_modules/@microsoft/gulp-core-build-webpack/lib/WebpackTask.js` at line 84 with the following code:
-
-```ts
-this.logError(`'${outputDir}':` + os_1.EOL + statsResult.errors.map(x => JSON.stringify(x, null, 2)).join(os_1.EOL) + os_1.EOL);
-```
+The compiled Tailwind file is gitignored. Run `npm run tailwindcss` or use `npm start` / `npm run build`, which run it automatically.

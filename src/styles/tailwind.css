@@ -1,4 +1,4 @@
-@source "./src/**/*.{html,ts,tsx}";
+@source "../";
 /* Tailwind v4: import + CSS-first config */
 @layer theme, base, components, utilities;
 

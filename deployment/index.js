@@ -15,7 +15,7 @@ const sp = spfi().using(
     msal: {
       config: {
         auth: {
-          clientId: '<clientId>>',
+          clientId: '<clientId>',
           authority:
             'https://login.microsoftonline.com/<tenantId>',
           clientCertificate: {
