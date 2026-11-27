@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@pnp/nodejs": "^3.13.0",
-    "@pnp/sp": "^3.13.0"
+    "@pnp/nodejs": "^4.23.0",
+    "@pnp/sp": "^4.23.0"
   }
 }

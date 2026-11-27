@@ -2,12 +2,10 @@
   "@microsoft/generator-sharepoint": {
     "plusBeta": false,
     "isCreatingSolution": true,
-    "nodeVersion": "22.17.1",
-    "sdksVersions": {
-      "@microsoft/microsoft-graph-client": "3.0.2",
-      "@microsoft/teams-js": "2.24.0"
-    },
-    "version": "1.21.1",
+    "useGulp": false,
+    "nodeVersion": "24.14.1",
+    "sdksVersions": {},
+    "version": "1.24.2",
     "libraryName": "sp-webpart-template",
     "libraryId": "1ae69cc5-f4e4-4657-8ce1-363fc80c7633",
     "environment": "spo",

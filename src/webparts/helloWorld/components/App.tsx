@@ -3,13 +3,9 @@ import '../../../styles/dist/tailwind.css';
 
 export interface IAppProps {
   description: string;
-  isDarkTheme: boolean;
-  environmentMessage: string;
-  hasTeamsContext: boolean;
-  userDisplayName: string;
 }
 
-const App = ({ description }: IAppProps) => {
+const App = ({ description }: IAppProps): React.ReactElement => {
   return (
     <div className="w-full flex flex-col gap-4 text-center">
       <h1 className="text-3xl font-bold">Hello, {description}!</h1>

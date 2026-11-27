@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
+import { createRoot, type Root } from 'react-dom/client';
 import { Version } from '@microsoft/sp-core-library';
 import {
   type IPropertyPaneConfiguration,
@@ -29,19 +29,15 @@ export enum AppMode {
 export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorldWebPartProps> {
 
   private _isDarkTheme: boolean = false;
-  private _environmentMessage: string = '';
   private _appMode: AppMode = AppMode.SharePoint;
   private _theme: Theme = webLightTheme;
+  private _root: Root | undefined;
 
   public render(): void {
     const element: React.ReactElement<IAppProps> = React.createElement(
       App,
       {
-        description: this.properties.description,
-        isDarkTheme: this._isDarkTheme,
-        environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        description: this.properties.description
       }
     );
 
@@ -65,7 +61,10 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       value: 'hello-world' // change to unique id
     }, fluentElement);
 
-    ReactDom.render(idPrefixElement, this.domElement);
+    if (!this._root) {
+      this._root = createRoot(this.domElement);
+    }
+    this._root.render(idPrefixElement);
   }
 
   protected async onInit(): Promise<void> {
@@ -77,10 +76,10 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
         case 'teamsmodern': this._appMode = _l ? AppMode.TeamsLocal : AppMode.Teams; break;
         case 'office': this._appMode = _l ? AppMode.OfficeLocal : AppMode.Office; break;
         case 'outlook': this._appMode = _l ? AppMode.OutlookLocal : AppMode.Outlook; break;
-        default: throw new Error('Unknown host');
+        default: this._appMode = _l ? AppMode.SharePointLocal : AppMode.SharePoint;
       }
     } else this._appMode = _l ? AppMode.SharePointLocal : AppMode.SharePoint;
-    await initSP(this.context);
+    initSP(this.context);
     return super.onInit();
   }
 
@@ -89,12 +88,13 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     this._isDarkTheme = !!currentTheme.isInverted;
     //if the app mode is sharepoint, adjust the fluent ui 9 web light theme to use the sharepoint theme color, teams/dark mode should be fine on default
     if (this._appMode === AppMode.SharePoint || this._appMode === AppMode.SharePointLocal) {
-      this._theme = createV9Theme(currentTheme as undefined, webLightTheme);
+      this._theme = createV9Theme(currentTheme as Parameters<typeof createV9Theme>[0], webLightTheme);
     }
   }
 
   protected onDispose(): void {
-    ReactDom.unmountComponentAtNode(this.domElement);
+    this._root?.unmount();
+    this._root = undefined;
   }
 
   protected get dataVersion(): Version {
